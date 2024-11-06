@@ -21,6 +21,10 @@ sealed class Receiver : System.IDisposable
     EventKicker _event;
     Texture2D _texture;
 
+    bool _linear = true;
+    public bool IsLinear =>  _linear;
+
+
     #endregion
 
     #region Object lifecycle
@@ -85,10 +89,17 @@ sealed class Receiver : System.IDisposable
         // We try creating a receiver texture every frame until getting a
         // correct one.
         if (_texture == null && data.texturePointer != IntPtr.Zero)
-            _texture = Texture2D.CreateExternalTexture
-              ((int)data.width, (int)data.height, TextureFormat.RGBA32,
-               false, false, data.texturePointer);
+        {
+            (TextureFormat format, bool isLinear) =
+                FormatUtils.FromNativeFormat((DXGIFormat)data.nativeFormat);
 
+            _linear = isLinear;
+            
+            _texture = Texture2D.CreateExternalTexture
+            ((int)data.width, (int)data.height, format,
+                false, isLinear, data.texturePointer);
+        }
+        
         // Update event for the render thread
         _event.IssuePluginEvent(EventID.UpdateReceiver);
     }
