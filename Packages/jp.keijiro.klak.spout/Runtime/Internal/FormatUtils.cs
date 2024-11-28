@@ -32,7 +32,7 @@ namespace Klak.Spout
                 case DXGIFormat.DXGI_FORMAT_UNKNOWN:
                     throw new InvalidOperationException("Unknown Format");
                 default:
-                    throw new NotImplementedException($"format={format}");
+                    return (TextureFormat.BGRA32, false);
             }
         }
     }
