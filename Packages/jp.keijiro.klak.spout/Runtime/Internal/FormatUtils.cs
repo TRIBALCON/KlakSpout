@@ -30,9 +30,9 @@ namespace Klak.Spout
                 case DXGIFormat.DXGI_FORMAT_R16_FLOAT:
                     return (TextureFormat.RHalf, true);
                 case DXGIFormat.DXGI_FORMAT_UNKNOWN:
-                    throw new InvalidOperationException("Unknown Format");
+                    return (TextureFormat.BGRA32, true);
                 default:
-                    return (TextureFormat.BGRA32, false);
+                    return (TextureFormat.BGRA32, true);
             }
         }
     }
