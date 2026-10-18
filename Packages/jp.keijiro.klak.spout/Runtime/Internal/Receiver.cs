@@ -20,6 +20,7 @@ sealed class Receiver : System.IDisposable
     IntPtr _plugin;
     EventKicker _event;
     Texture2D _texture;
+    IntPtr _texturePointer;
 
     bool _linear = true;
     public bool IsLinear =>  _linear;
@@ -64,6 +65,7 @@ sealed class Receiver : System.IDisposable
 
         Utility.Destroy(_texture);
         _texture = null;
+        _texturePointer = IntPtr.Zero;
     }
 
     #endregion
@@ -78,8 +80,8 @@ sealed class Receiver : System.IDisposable
 
         // Texture refresh:
         // If we are referring to an old texture pointer, destroy it first.
-        if (_texture != null &&
-            _texture.GetNativeTexturePtr() != data.texturePointer)
+        // GetNativeTexturePtr would synchronize with the render thread each frame.
+        if (_texture != null && _texturePointer != data.texturePointer)
         {
             Utility.Destroy(_texture);
             _texture = null;
@@ -98,6 +100,7 @@ sealed class Receiver : System.IDisposable
             _texture = Texture2D.CreateExternalTexture
             ((int)data.width, (int)data.height, format,
                 false, isLinear, data.texturePointer);
+            _texturePointer = data.texturePointer;
         }
         
         // Update event for the render thread

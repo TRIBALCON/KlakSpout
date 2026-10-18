@@ -73,7 +73,7 @@ public sealed partial class SpoutReceiver : MonoBehaviour
         _buffer = null;
     }
 
-    void Update()
+    void LateUpdate()
     {
         // Receiver lazy initialization
         if (_receiver == null)
